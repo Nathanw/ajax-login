@@ -26,6 +26,10 @@
         <strong v-text="errors.invalid"></strong>
     </p>
 
+    <p class="text-danger text-center" v-if="errors.general">
+        <strong v-text="errors.general"></strong>
+    </p>
+
     <div class="form-group">
         <div class="col-md-6 col-md-offset-4">
             <div class="checkbox">
@@ -64,14 +68,14 @@
         },
         methods: {
             onSubmit() {
-                this.errors = {};
-                this.$http.post('/api/login', this.form).then((response) => {
+                this.$http.post('/api/login', this.form).then(response => {
                     window.location.replace(response.data.redirectTo);
-                }, (response) => {
-                    if(response.status == 400) {
+                })
+                .catch(response => {
+                    if (response.data.errors) {
                         this.errors = response.data.errors;
-                    } else if(response.status == 406) {
-                        this.errors = response.data.errors;
+                    } else {
+                        this.errors = { general: 'An unexpected error occurred. Please try again later.' };
                     }
                 });
             }
