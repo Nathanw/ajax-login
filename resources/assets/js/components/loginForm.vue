@@ -65,10 +65,6 @@
         methods: {
             onSubmit() {
                 this.errors = {};
-                this.$http.interceptors.push((request, next) => {
-                    request.headers['X-CSRF-TOKEN'] = Laravel.csrfToken;
-                    next();
-                });
                 this.$http.post('/api/login', this.form).then((response) => {
                     window.location.replace(response.data.redirectTo);
                 }, (response) => {
